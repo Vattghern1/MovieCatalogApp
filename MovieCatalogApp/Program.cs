@@ -16,7 +16,10 @@ builder.Logging.AddConsole();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IFavoriteMovieService, FavoriteMovieService>();
 builder.Services.AddScoped<IValidateTokenService, ValidateTokenService>();
+
 
 
 builder.Services.AddControllers();

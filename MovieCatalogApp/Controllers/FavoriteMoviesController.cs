@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using MovieCatalog.API.Interfaces;
 using MovieCatalog.API.Models.Entities;
 using MovieCatalogApp.Models;
 
@@ -9,22 +12,49 @@ namespace MovieCatalog.API.Controllers
     [ApiController]
     public class FavotireMoviesController : ControllerBase
     {
-        [HttpGet]
-        public MoviesListModel GetFavoriteMovies(MoviesListModel newMoviesListModel)
+        private readonly IFavoriteMovieService _favoriteMovieService;
+        private readonly IValidateTokenService _validateTokenService;
+
+        public FavotireMoviesController(IFavoriteMovieService favoriteMovieService, IValidateTokenService validateTokenService)
         {
-            return newMoviesListModel;
+            _validateTokenService = validateTokenService;
+            _favoriteMovieService = favoriteMovieService;
+
+        }
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetFavoriteMovies()
+        {
+            var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            if (_validateTokenService.ValidateToken(accessToken) == false)
+            {
+                return BadRequest("Token unavailable.");
+            }
+            return _favoriteMovieService.GetFavoriteMovies(User.Identity.Name);
         }
 
         [HttpPost("{id}/add")]
-        public string addFavoriteMovie()
+        [Authorize]
+        public IActionResult AddFavoriteMovie(Guid movieId)
         {
-            return "add Favorite Movie";
+            var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            if (_validateTokenService.ValidateToken(accessToken) == false)
+            {
+                return BadRequest("Token unavailable.");
+            }
+            return _favoriteMovieService.AddNewMovieToFavorites(User.Identity.Name, movieId);
         }
 
         [HttpDelete("{id}/delete")]
-        public string deleteFavoriteMovie()
+        [Authorize]
+        public IActionResult DeleteFavoriteMovie(Guid movieId)
         {
-            return "delete Favorite Movie";
+            var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            if (_validateTokenService.ValidateToken(accessToken) == false)
+            {
+                return BadRequest("Token unavailable.");
+            }
+            return _favoriteMovieService.DeleteMovieFromFavorites(User.Identity.Name, movieId);
         }
 
     }

@@ -19,7 +19,6 @@ namespace MovieCatalog.API.Controllers
         {
             _userService = userService;
             _validateTokenService = validateTokenService;
-            
         }
 
         [HttpGet]

@@ -46,8 +46,6 @@ namespace MovieCatalog.API.Controllers
                 return BadRequest("Token unavailable.");
             }
             return  _movieService.GetMovieDetails(User.Identity.Name, id);
-        }
-        
-        
+        }        
     }
 }

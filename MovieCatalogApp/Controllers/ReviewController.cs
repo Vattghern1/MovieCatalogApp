@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using MovieCatalog.API.Interfaces;
 using MovieCatalog.API.Models;
 using MovieCatalogApp.Models;
 
@@ -9,22 +12,49 @@ namespace MovieCatalog.API.Controllers
     [ApiController]
     public class ReviewController : Controller
     {
-        [HttpPost("add")]
-        public string addReview()
+        private readonly IReviewService _reviewService;
+        private readonly IValidateTokenService _validateTokenService;
+
+        public ReviewController(IReviewService reviewService, IValidateTokenService validateTokenService)
         {
-            return "add Review";
+            _reviewService = reviewService;
+            _validateTokenService = validateTokenService;
+
+        }
+        [HttpPost("add")]
+        [Authorize]
+        public IActionResult AddReview(Guid movieId, ReviewModifyModel request)
+        {
+            var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            if (_validateTokenService.ValidateToken(accessToken) == false)
+            {
+                return BadRequest("Token unavailable.");
+            }
+            return _reviewService.AddNewReview(User.Identity.Name, movieId, request);
         }
 
         [HttpPut("{id}/edit")]
-        public ReviewModifyModel editReview(ReviewModifyModel newReviewModifyModel)
+        [Authorize]
+        public IActionResult EditReview(Guid movieId, Guid id, ReviewModifyModel request)
         {
-            return newReviewModifyModel;
+            var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            if (_validateTokenService.ValidateToken(accessToken) == false)
+            {
+                return BadRequest("Token unavailable.");
+            }
+            return _reviewService.EditReview(User.Identity.Name, movieId, id, request);
         }
 
         [HttpDelete("{id}/delete")]
-        public string deleteReview()
+        [Authorize]
+        public IActionResult DeleteReview(Guid movieId, Guid id)
         {
-            return "delete Review";
+            var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            if (_validateTokenService.ValidateToken(accessToken) == false)
+            {
+                return BadRequest("Token unavailable.");
+            }
+            return _reviewService.DeleteReview(User.Identity.Name, movieId, id);
         }
     }
 }
