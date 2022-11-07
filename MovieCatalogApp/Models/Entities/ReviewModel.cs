@@ -1,6 +1,7 @@
-﻿using System.Data;
+﻿using MovieCatalog.API.Models.DTOs;
+using System.Data;
 
-namespace MovieCatalog.API.Models
+namespace MovieCatalog.API.Models.Entities
 {
     public class ReviewModel
     {

@@ -12,18 +12,13 @@ namespace MovieCatalog.API.Services
         {
             _context = context;
         }
-        public bool ValidateToken(IHeaderDictionary token)
+        public bool ValidateToken(string token)
         {
-            string token = token.ToString;
             var requstedToken = _context.JSONWebTokens.Where(m => m.Token == token).FirstOrDefault();
-            if (requstedToken == null)
-            {
-                return false;   
-            }
-            if (requstedToken.DateCloseWorkToken < DateTime.Now)
+            if (requstedToken != null)
             {
                 return false;
-            }
+            } 
             return true;
         }
     }

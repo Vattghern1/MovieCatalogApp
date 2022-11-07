@@ -26,12 +26,12 @@ namespace MovieCatalog.API.Services
 
         public JsonResult PutUserProfile(ProfileModel updateProfile, string userName)
         {
-            var newUserEmail = _context.ProfileModels.Where(m => m.Email == updateProfile.Email).FirstOrDefault();
-
-            if (newUserEmail.Email != null && newUserEmail.UserId != updateProfile.UserId)
+          
+            if (_context.ProfileModels.FirstOrDefault(m => m.Email == updateProfile.Email && m.UserId != updateProfile.UserId) != null)
             {
                 throw new Exception("This email address is already in use by another person.");
             }
+            
 
             var userProfile = _context.ProfileModels.Where(m => m.UserId == updateProfile.UserId).FirstOrDefault();
 

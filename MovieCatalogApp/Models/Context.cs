@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieCatalog.API.Models;
 using MovieCatalog.API.Models.Entities;
 
 namespace MovieCatalogApp.Models
@@ -11,7 +10,7 @@ namespace MovieCatalogApp.Models
         public DbSet<ReviewModel>? ReviewModels { get; set; }
         public DbSet<JSONWebToken>? JSONWebTokens { get; set; }
         public DbSet<LoginsAndPasswordsOfUsers>? LoginsAndPasswords { get; set; }
-        public DbSet<MoviesListModel>? Movies { get; set; }
+       // public DbSet<MoviesListModel>? Movies { get; set; }
       
 
         public Context(DbContextOptions<Context> options): base(options)

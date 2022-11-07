@@ -36,7 +36,10 @@ namespace MovieCatalog.API.Services
 
         public JsonResult GetMovieDetails(string userName, Guid id)
         {
-            var requestedMovie = _context.MovieDetailsModels.Where(m => m.MovieId == id).FirstOrDefault();
+            var requestedMovie = _context.MovieDetailsModels.Where(m => m.MovieId == id)
+                    .Include(u => u.Genres).Include(c => c.Reviews)
+                    .ToList();
+                    
 
             if (requestedMovie == null)
             {

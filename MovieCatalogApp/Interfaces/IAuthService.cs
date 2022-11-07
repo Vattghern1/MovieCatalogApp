@@ -9,7 +9,7 @@ namespace MovieCatalog.API.Interfaces
     {
         public JsonResult Register(UserRegisterModel request);
         public JsonResult Login(LoginCredentials request);
-        public JsonResult Logout(string? name);
+        public JsonResult Logout(string? token, string userNick);
 
     }
 }

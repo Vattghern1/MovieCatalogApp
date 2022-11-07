@@ -9,7 +9,7 @@ namespace MovieCatalog.API.Models.Entities
 
         [Key]
         public string Token { get; set; }
-        public DateTime DateCloseWorkToken { get; set; }
+        
 
     }
 }

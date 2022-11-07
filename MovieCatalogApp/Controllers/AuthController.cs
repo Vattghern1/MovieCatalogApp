@@ -4,7 +4,7 @@ using MovieCatalog.API.Interfaces;
 using MovieCatalog.API.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using MovieCatalogApp.Models;
-
+using Microsoft.Net.Http.Headers;
 
 namespace MovieCatalog.API.Controllers
 {
@@ -13,9 +13,11 @@ namespace MovieCatalog.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        
         public AuthController(IAuthService authService)
         {
             _authService = authService;
+            
         }
 
         [HttpPost("register")]
@@ -45,13 +47,9 @@ namespace MovieCatalog.API.Controllers
         [Authorize]
         public IActionResult Logout()
         {
-            
-            if (User.Identity.Name == null)
-            {
-                return BadRequest("Name is null.");
-            }
+            var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
-            return _authService.Logout(User.Identity.Name);
+            return _authService.Logout(accessToken, User.Identity.Name);
 
         }
     }

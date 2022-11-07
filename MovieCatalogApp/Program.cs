@@ -14,6 +14,9 @@ builder.Logging.AddConsole();
 // Add services to the container.
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IValidateTokenService, ValidateTokenService>();
 
 
 builder.Services.AddControllers();

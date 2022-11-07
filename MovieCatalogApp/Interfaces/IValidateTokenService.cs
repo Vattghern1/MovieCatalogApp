@@ -2,6 +2,6 @@
 {
     public interface IValidateTokenService
     {
-        public bool ValidateToken(IHeaderDictionary token);
+        public bool ValidateToken(string token);
     }
 }

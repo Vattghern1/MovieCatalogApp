@@ -109,16 +109,7 @@ namespace MovieCatalog.API.Services
                 access_token = encodedJwt,
                 username = identity.Name
             };
-                
-
-            var userJwt = new JSONWebToken
-            {
-                UserId = loginUserProfile.UserId,
-                Token = response.access_token,
-                DateCloseWorkToken = DateTime.Now.AddDays(1)
-            };
-
-            _context.JSONWebTokens.Add(userJwt);
+                      
             _context.SaveChanges();
 
             return new JsonResult(response);
@@ -146,22 +137,32 @@ namespace MovieCatalog.API.Services
         }
 
 
-        public JsonResult Logout(string? NickName)
+        public JsonResult Logout(string token, string userName)
         {
-            var user = _context.ProfileModels.FirstOrDefault(m => m.NickName == NickName);
+            
 
-          //  _context.JSONWebTokens.Remove(_context.JSONWebTokens.Where(m => m.UserId == user.UserId).FirstOrDefault());
+            if (_context.JSONWebTokens.FirstOrDefault(m => m.Token == token) != null)
+            {
+                throw new Exception("Token is not valid.");
+            }
+
+            var user = _context.ProfileModels.FirstOrDefault(m => m.NickName == userName);
+
+            var newBadToken = new JSONWebToken
+            {
+                UserId = user.UserId,
+                Token = token
+            };
+
+            _context.JSONWebTokens.Add(newBadToken);
             _context.SaveChanges();
-     
+
             var response = new
             {
                 token = "",
                 message = "Logged Out"
             };
-            
             return new JsonResult(response);
-            ;
-
         }
 
 
