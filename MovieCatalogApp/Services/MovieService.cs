@@ -102,6 +102,36 @@ namespace MovieCatalog.API.Services
                 };
                 requestedGenres.Add(Genre);
             };
+            
+           
+
+            List<ReviewModel> reviews = new();
+
+            var reviewFromDB = _context.Reviews.Include(c => c.User).Where(c => c.Movie == requestedMovie);
+          
+            foreach (var review in reviewFromDB)
+            {
+                if (review != null)
+                {
+                    var Review = new ReviewModel()
+                    {
+                        Id = review.ReviewId,
+                        Rating = review.Rating,
+                        ReviewText = review.ReviewText,
+                        CreateDateTime = review.CreateDateTime,
+                        IsAnonymous = review.IsAnonymous,
+                        Author = new UserShortModel()
+                        {
+                            UserId = review.User.UserId,
+                            NickName = review.User.NickName,
+                            Avatar = review.User.AvatarLink
+                        }
+                    };
+                    reviews.Add(Review);
+                }
+            };
+
+            
 
             var requestedMovieDetails = new MovieDetailsModel()
             {
@@ -117,7 +147,8 @@ namespace MovieCatalog.API.Services
                 Budget = requestedMovie.Budget,
                 Fees = requestedMovie.Fees,
                 AgeLimit = requestedMovie.AgeLimit,
-                Genres = requestedGenres
+                Genres = requestedGenres,
+                Reviews = reviews
 
             };
 

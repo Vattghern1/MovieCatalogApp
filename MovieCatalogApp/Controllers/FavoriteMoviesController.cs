@@ -35,26 +35,26 @@ namespace MovieCatalog.API.Controllers
 
         [HttpPost("{id}/add")]
         [Authorize]
-        public IActionResult AddFavoriteMovie(Guid movieId)
+        public IActionResult AddFavoriteMovie(Guid id)
         {
             var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             if (_validateTokenService.ValidateToken(accessToken) == false)
             {
                 return BadRequest("Token unavailable.");
             }
-            return _favoriteMovieService.AddNewMovieToFavorites(User.Identity.Name, movieId);
+            return _favoriteMovieService.AddNewMovieToFavorites(User.Identity.Name, id);
         }
 
         [HttpDelete("{id}/delete")]
         [Authorize]
-        public IActionResult DeleteFavoriteMovie(Guid movieId)
+        public IActionResult DeleteFavoriteMovie(Guid id)
         {
             var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             if (_validateTokenService.ValidateToken(accessToken) == false)
             {
                 return BadRequest("Token unavailable.");
             }
-            return _favoriteMovieService.DeleteMovieFromFavorites(User.Identity.Name, movieId);
+            return _favoriteMovieService.DeleteMovieFromFavorites(User.Identity.Name, id);
         }
 
     }

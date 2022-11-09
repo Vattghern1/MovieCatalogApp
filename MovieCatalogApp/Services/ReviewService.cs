@@ -76,9 +76,8 @@ namespace MovieCatalog.API.Services
         public JsonResult DeleteReview(string userName, Guid movieId, Guid reviewId)
         {
             var user = _context.UsersProfiles.FirstOrDefault(user => user.NickName == userName);
-            var movie = _context.Movies.FirstOrDefault(movie => movie.MovieId == movieId);
 
-            var review = _context.Reviews.Where(m => m.Movie == movie && m.User == user).FirstOrDefault();
+            var review = _context.Reviews.Where(m => m.ReviewId == reviewId).FirstOrDefault();
 
             if (review == null)
             {
@@ -90,8 +89,12 @@ namespace MovieCatalog.API.Services
                 throw new Exception("You cannot edit someone else's review.");
             };
 
-            _context.Reviews.Remove(review);
-            _context.SaveChanges();
+            if (review != null)
+            {
+                _context.Reviews.Remove(review);
+                _context.SaveChanges();
+            }
+            
 
             return new JsonResult("Okey");
         }
