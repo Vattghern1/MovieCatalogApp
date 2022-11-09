@@ -19,7 +19,7 @@ namespace MovieCatalog.API.Services
             var user = _context.UsersProfiles.FirstOrDefault(user => user.NickName == userName);
             var movie = _context.Movies.FirstOrDefault(movie => movie.MovieId == movieId);
 
-            var checker = _context.Reviews.Where(m => m.Movie == movie && m.User == user);
+            var checker = _context.Reviews.Where(m => m.Movie == movie && m.User == user).FirstOrDefault();
 
             if (checker != null)
             {

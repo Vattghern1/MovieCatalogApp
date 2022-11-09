@@ -18,11 +18,7 @@ namespace MovieCatalog.API.Services
         }
 
         public JsonResult GetMoviesPage(string userName, int page)
-        {
-            List<MovieElementModel> movieOnPage = new()
-            {
-             
-            };
+        {   
             
             var requestedMovies = _context.Movies
                 .Include(movie => movie.Genres)
@@ -30,8 +26,7 @@ namespace MovieCatalog.API.Services
                 .Take(6)
                 .ToList();
 
-
-            
+            List<MovieElementModel> movieOnPage = new();
             foreach (var movieElement in requestedMovies)
             {
                 List<GenreModel> requestedGenres = new();
@@ -44,6 +39,21 @@ namespace MovieCatalog.API.Services
                     };
                     requestedGenres.Add(Genre);
                 };
+
+                List<ReviewShortModel> reviews = new();
+
+                var reviewFromDB = _context.Reviews.Where(review => review.Movie == movieElement).Include(review => review.Movie).ToList();
+
+                foreach (var review in reviewFromDB)
+                {
+                    var Review = new ReviewShortModel()
+                    {
+                        Id = review.ReviewId,
+                        Rating = review.Rating,
+                    };
+                    reviews.Add(Review);
+                };
+
                 var requestedMovie = new MovieElementModel()
                 {
                     MovieId = movieElement.MovieId,
@@ -52,11 +62,12 @@ namespace MovieCatalog.API.Services
                     Year = movieElement.Year,
                     Country = movieElement.Country,
                     Genres = requestedGenres,
-                    Reviews = null
+                    Reviews = reviews
 
 
                 };
-                movieOnPage.Add(requestedMovie);
+                movieOnPage.Add(requestedMovie);               
+                
             };
 
             var moviesPageList = new MoviesPagedListModel()

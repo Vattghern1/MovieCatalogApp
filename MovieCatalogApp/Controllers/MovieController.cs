@@ -42,64 +42,15 @@ namespace MovieCatalog.API.Controllers
         
 
         [HttpGet("details/{id}")]
-        //[Authorize]
+        [Authorize]
         public IActionResult GetMovieDetails(Guid id)
         {
-            /*var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             if (_validateTokenService.ValidateToken(accessToken) == false)
             {
                 return BadRequest("Token unavailable.");
-            }*/
+            }
             return  _movieService.GetMovieDetails(User.Identity.Name, id);
         }
-
-        /*[HttpPost("newMovie")]
-
-        public IActionResult newMovie(List<MovieDetailsModel> request)
-        {
-            foreach (MovieDetailsModel movieDetails in request)
-            {
-
-                List<GenreDB> listOfGenre = new();
-                foreach (GenreModel genre in movieDetails.Genres)
-                {
-                    var newGenre = new GenreDB
-                    {
-                        Id = genre.Id,
-                        Name = genre.Name,
-                       
-                    };
-                   
-                    
-                    
-                    
-                };
-
-                
-                var newMovie = new MovieEntity
-                {
-                    MovieId = movieDetails.MovieId,
-                    Name = movieDetails.Name,
-                    Poster = movieDetails.Poster,
-                    Year = movieDetails.Year,
-                    Country = movieDetails.Country,
-                    Time = movieDetails.Time,
-                    Tagline = movieDetails.Tagline,
-                    Description = movieDetails.Description,
-                    Director = movieDetails.Director,
-                    Budget = movieDetails.Budget,
-                    Fees = movieDetails.Fees,
-                    AgeLimit = movieDetails.AgeLimit,
-                };
-
-                
-
-                _context.Movies.Add(newMovie);
-
-               
-            }
-            _context.SaveChanges();
-            return Ok();
-        }*/
     }
 }
