@@ -30,7 +30,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return _userService.GetUserProfile(User.Identity.Name);
+            return _userService.GetUserProfile(User.Identity.Name, HttpContext);
         }
 
         [HttpPut]
@@ -47,7 +47,7 @@ namespace MovieCatalog.API.Controllers
                 return BadRequest("Validation error.");
             }
 
-            return _userService.PutUserProfile(updateProfile, User.Identity.Name);
+            return _userService.PutUserProfile(updateProfile, User.Identity.Name, HttpContext);
         }
     }
 }

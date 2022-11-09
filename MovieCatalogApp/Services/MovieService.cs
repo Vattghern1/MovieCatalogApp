@@ -17,7 +17,7 @@ namespace MovieCatalog.API.Services
             _context = context;
         }
 
-        public JsonResult GetMoviesPage(string userName, int page)
+        public JsonResult GetMoviesPage(string userName, int page, HttpContext context)
         {   
             
             var requestedMovies = _context.Movies
@@ -85,7 +85,7 @@ namespace MovieCatalog.API.Services
             return new JsonResult(moviesPageList);
         }
 
-        public JsonResult GetMovieDetails(string userName, Guid id)
+        public JsonResult GetMovieDetails(string userName, Guid id, HttpContext context)
         {
             var requestedMovie = _context.Movies
                     .Include(movie => movie.Genres)
@@ -155,7 +155,8 @@ namespace MovieCatalog.API.Services
 
             if (requestedMovie == null)
             {
-                throw new Exception("Movie not found.");
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                return new JsonResult("Movie not found.");
             }
 
             return new JsonResult(requestedMovieDetails);

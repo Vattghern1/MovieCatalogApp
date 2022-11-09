@@ -5,7 +5,7 @@ namespace MovieCatalog.API.Interfaces
 {
     public interface IUserService
     {
-        public JsonResult GetUserProfile(string userName);
-        public JsonResult PutUserProfile(ProfileModel updateProfile, string userName);
+        public JsonResult GetUserProfile(string userName, HttpContext context);
+        public JsonResult PutUserProfile(ProfileModel updateProfile, string userName, HttpContext context);
     }
 }

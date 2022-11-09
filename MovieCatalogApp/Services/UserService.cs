@@ -13,23 +13,25 @@ namespace MovieCatalog.API.Services
             _context = context;
         }
 
-        public JsonResult GetUserProfile(string userName)
+        public JsonResult GetUserProfile(string userName, HttpContext context)
         {
             var requestedProfile = _context.UsersProfiles.Where(m => m.NickName == userName).FirstOrDefault();
             if (requestedProfile == null)
             {
-                throw new Exception("Profile not found");
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                return new JsonResult("Profile not found.");
             }
 
             return new JsonResult(requestedProfile);
         }
 
-        public JsonResult PutUserProfile(ProfileModel updateProfile, string userName)
+        public JsonResult PutUserProfile(ProfileModel updateProfile, string userName, HttpContext context)
         {
           
             if (_context.UsersProfiles.FirstOrDefault(m => m.Email == updateProfile.Email && m.UserId != updateProfile.UserId) != null)
             {
-                throw new Exception("This email address is already in use by another person.");
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
+                return new JsonResult("This email address is already in use by another person.");
             }
             
 

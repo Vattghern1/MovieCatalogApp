@@ -24,19 +24,21 @@ namespace MovieCatalog.API.Services
             _configuration = configuration;
         }
 
-        public JsonResult Register(UserRegisterModel request)
+        public JsonResult Register(UserRegisterModel request, HttpContext context)
         {
 
-            var newNickName = _context.UsersProfiles.Where(m => m.NickName == request.NickName).FirstOrDefault();
-            var newEmail = _context.UsersProfiles.Where(m => m.Email == request.Email).FirstOrDefault();
+            var userNick = _context.UsersProfiles.Where(m => m.NickName == request.NickName).FirstOrDefault();
+            var userEmail = _context.UsersProfiles.Where(m => m.Email == request.Email).FirstOrDefault();
 
-            if (newNickName != null)
+            if (userNick != null && userNick.NickName != null)
             {
-                throw new Exception("This Nickname is already taken.");
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
+                return new JsonResult("This Nickname is already taken.") ;
             }
-            if (newEmail != null)
+            if (userEmail != null && userEmail.Email != null)
             {
-                throw new Exception("This Email is already taken.");
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
+                return new JsonResult("This Email is already taken.");
             }
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -72,27 +74,30 @@ namespace MovieCatalog.API.Services
                 Password = request.Password
             };
 
-            return Login(registerLoginCrenentials);
+            return Login(registerLoginCrenentials, context);
         }
 
-        public JsonResult Login(LoginCredentials request)
+        public JsonResult Login(LoginCredentials request, HttpContext context)
         {
             var identity = GetIdentity(request.NickName, request.Password);
             if (identity == null)
             {
-                throw new Exception("Invalid username or password." );
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return new JsonResult("Invalid username or password.");
             }
 
             var loginUserProfile = _context.UsersProfiles.Where(m => m.NickName == request.NickName).FirstOrDefault();
             if (loginUserProfile == null)
             {
-                throw new Exception("User not found.");
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                return new JsonResult("User not found.");
             }
 
             var loginUserPasswords = _context.LoginsAndPasswords.Where(m => m.NickName == loginUserProfile.NickName).FirstOrDefault();
             if (!VerifyPasswordHash(request.Password, loginUserPasswords.PasswordHash, loginUserPasswords.PasswordSalt))
             {
-                throw new Exception("Wrong passwrod.");
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return new JsonResult("Wrong passwrod.");
             }
             
             var now = DateTime.UtcNow;
@@ -139,13 +144,15 @@ namespace MovieCatalog.API.Services
         }
 
 
-        public JsonResult Logout(string token, string userName)
+        public JsonResult Logout(string token, string userName, HttpContext context)
         {
             
 
             if (_context.JSONWebTokens.FirstOrDefault(m => m.Token == token) != null)
             {
-                throw new Exception("Token is not valid.");
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return new JsonResult("Token is not valid.");
+                
             }
 
             var user = _context.UsersProfiles.FirstOrDefault(m => m.NickName == userName);

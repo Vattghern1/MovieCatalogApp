@@ -37,7 +37,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return _movieService.GetMoviesPage(User.Identity.Name, page);
+            return _movieService.GetMoviesPage(User.Identity.Name, page, HttpContext);
         }
         
 
@@ -50,7 +50,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return  _movieService.GetMovieDetails(User.Identity.Name, id);
+            return  _movieService.GetMovieDetails(User.Identity.Name, id, HttpContext);
         }
     }
 }

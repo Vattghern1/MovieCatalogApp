@@ -30,7 +30,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return _reviewService.AddNewReview(User.Identity.Name, movieId, request);
+            return _reviewService.AddNewReview(User.Identity.Name, movieId, request, HttpContext);
         }
 
         [HttpPut("{id}/edit")]
@@ -42,7 +42,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return _reviewService.EditReview(User.Identity.Name, movieId, id, request);
+            return _reviewService.EditReview(User.Identity.Name, movieId, id, request, HttpContext);
         }
 
         [HttpDelete("{id}/delete")]
@@ -54,7 +54,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return _reviewService.DeleteReview(User.Identity.Name, movieId, id);
+            return _reviewService.DeleteReview(User.Identity.Name, movieId, id, HttpContext);
         }
     }
 }

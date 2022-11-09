@@ -28,7 +28,8 @@ namespace MovieCatalog.API.Controllers
                 return BadRequest("Validation error.");
             }
 
-            return _authService.Register(request);
+            return _authService.Register(request, HttpContext);
+
         }
 
         [HttpPost("login")]
@@ -40,7 +41,7 @@ namespace MovieCatalog.API.Controllers
                 return BadRequest("Validation error.");
             }
 
-            return _authService.Login(request); 
+            return _authService.Login(request, HttpContext); 
         }
 
         [HttpPost("logout")]
@@ -49,7 +50,7 @@ namespace MovieCatalog.API.Controllers
         {
             var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
-            return _authService.Logout(accessToken, User.Identity.Name);
+            return _authService.Logout(accessToken, User.Identity.Name, HttpContext);
 
         }
     }

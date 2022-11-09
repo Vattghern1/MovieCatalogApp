@@ -14,7 +14,7 @@ namespace MovieCatalog.API.Services
             _context = context;
         }
 
-        public JsonResult AddNewReview(string userName, Guid movieId, ReviewModifyModel requestReview)
+        public JsonResult AddNewReview(string userName, Guid movieId, ReviewModifyModel requestReview, HttpContext context)
         {
             var user = _context.UsersProfiles.FirstOrDefault(user => user.NickName == userName);
             var movie = _context.Movies.FirstOrDefault(movie => movie.MovieId == movieId);
@@ -23,7 +23,8 @@ namespace MovieCatalog.API.Services
 
             if (checker != null)
             {
-                throw new Exception("This user already have review on this movie.");
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return new JsonResult("This user already have review on this movie.");
             }
 
 
@@ -44,7 +45,7 @@ namespace MovieCatalog.API.Services
             return new JsonResult("Okey.");
         }
 
-        public JsonResult EditReview(string userName, Guid movieId, Guid reviewId, ReviewModifyModel requestReview)
+        public JsonResult EditReview(string userName, Guid movieId, Guid reviewId, ReviewModifyModel requestReview, HttpContext context)
         {
 
             var user = _context.UsersProfiles.FirstOrDefault(user => user.NickName == userName);
@@ -54,12 +55,14 @@ namespace MovieCatalog.API.Services
 
             if (review == null)
             {
-                throw new Exception("Review not exist.");
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                return new JsonResult("Review not exist");
             };
 
             if (review.User != user)
             {
-                throw new Exception("You cannot edit someone else's review.");
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return new JsonResult("You cannot edit someone else's review.");
             };
 
 
@@ -73,7 +76,7 @@ namespace MovieCatalog.API.Services
             return new JsonResult("Okey");
         }
 
-        public JsonResult DeleteReview(string userName, Guid movieId, Guid reviewId)
+        public JsonResult DeleteReview(string userName, Guid movieId, Guid reviewId, HttpContext context)
         {
             var user = _context.UsersProfiles.FirstOrDefault(user => user.NickName == userName);
 
@@ -81,12 +84,14 @@ namespace MovieCatalog.API.Services
 
             if (review == null)
             {
-                throw new Exception("Review not exist.");
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                return new JsonResult("Review not exist");
             };
 
             if (review.User != user)
             {
-                throw new Exception("You cannot edit someone else's review.");
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return new JsonResult("You cannot edit someone else's review.");
             };
 
             if (review != null)

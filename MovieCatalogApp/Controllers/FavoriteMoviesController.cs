@@ -30,7 +30,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return _favoriteMovieService.GetFavoriteMovies(User.Identity.Name);
+            return _favoriteMovieService.GetFavoriteMovies(User.Identity.Name, HttpContext);
         }
 
         [HttpPost("{id}/add")]
@@ -42,7 +42,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return _favoriteMovieService.AddNewMovieToFavorites(User.Identity.Name, id);
+            return _favoriteMovieService.AddNewMovieToFavorites(User.Identity.Name, id, HttpContext);
         }
 
         [HttpDelete("{id}/delete")]
@@ -54,7 +54,7 @@ namespace MovieCatalog.API.Controllers
             {
                 return BadRequest("Token unavailable.");
             }
-            return _favoriteMovieService.DeleteMovieFromFavorites(User.Identity.Name, id);
+            return _favoriteMovieService.DeleteMovieFromFavorites(User.Identity.Name, id, HttpContext);
         }
 
     }

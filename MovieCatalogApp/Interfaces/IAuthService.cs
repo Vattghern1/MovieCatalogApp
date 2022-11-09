@@ -7,9 +7,9 @@ namespace MovieCatalog.API.Interfaces
 {
     public interface IAuthService
     {
-        public JsonResult Register(UserRegisterModel request);
-        public JsonResult Login(LoginCredentials request);
-        public JsonResult Logout(string? token, string userNick);
+        public JsonResult Register(UserRegisterModel request, HttpContext context);
+        public JsonResult Login(LoginCredentials request, HttpContext context);
+        public JsonResult Logout(string? token, string userNick, HttpContext context);
 
     }
 }

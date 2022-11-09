@@ -15,7 +15,7 @@ namespace MovieCatalog.API.Services
             _context = context;
         }
 
-        public JsonResult GetFavoriteMovies(string userName)
+        public JsonResult GetFavoriteMovies(string userName, HttpContext context)
         {
             var user = _context.UsersProfiles
                 .Include(c => c.FavoriteMovies)
@@ -69,7 +69,7 @@ namespace MovieCatalog.API.Services
             }).ToList();
         }
 
-        public JsonResult AddNewMovieToFavorites(string userName, Guid movieId)
+        public JsonResult AddNewMovieToFavorites(string userName, Guid movieId, HttpContext context)
         {
             var user = _context.UsersProfiles.Include(c=> c.FavoriteMovies).Where(user => user.NickName == userName).FirstOrDefault();
             var movie = _context.Movies.Where(movie => movie.MovieId == movieId).FirstOrDefault();
@@ -78,17 +78,20 @@ namespace MovieCatalog.API.Services
             {
                 if (userFavoriteMovie.MovieId == movieId)
                 {
-                    throw new Exception("This movie already in your favotite movie list.");
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    return new JsonResult("This movie already in your favotite movie list.");
+                    
                 }
             }
 
             user.FavoriteMovies.Add(movie);
             _context.SaveChanges();
-            
-            return new JsonResult("Okey");
+
+            context.Response.StatusCode = StatusCodes.Status200OK;
+            return new JsonResult("Okey.");
         }
 
-        public JsonResult DeleteMovieFromFavorites(string userName, Guid movieId)
+        public JsonResult DeleteMovieFromFavorites(string userName, Guid movieId, HttpContext context)
         {
             
             var user = _context.UsersProfiles.Include(c => c.FavoriteMovies).Where(user => user.NickName == userName).FirstOrDefault();
@@ -104,7 +107,9 @@ namespace MovieCatalog.API.Services
                     return new JsonResult("Okey");
                 }
             }
-            throw new Exception("This movie not exist in your favorite movie list.");
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            return new JsonResult("This movie not exist in your favorite movie list.");
+            
         }
     }
 }
