@@ -15,7 +15,7 @@ namespace MovieCatalog.API.Services
 
         public JsonResult GetUserProfile(string userName)
         {
-            var requestedProfile = _context.ProfileModels.Where(m => m.NickName == userName).FirstOrDefault();
+            var requestedProfile = _context.UsersProfiles.Where(m => m.NickName == userName).FirstOrDefault();
             if (requestedProfile == null)
             {
                 throw new Exception("Profile not found");
@@ -27,13 +27,13 @@ namespace MovieCatalog.API.Services
         public JsonResult PutUserProfile(ProfileModel updateProfile, string userName)
         {
           
-            if (_context.ProfileModels.FirstOrDefault(m => m.Email == updateProfile.Email && m.UserId != updateProfile.UserId) != null)
+            if (_context.UsersProfiles.FirstOrDefault(m => m.Email == updateProfile.Email && m.UserId != updateProfile.UserId) != null)
             {
                 throw new Exception("This email address is already in use by another person.");
             }
             
 
-            var userProfile = _context.ProfileModels.Where(m => m.UserId == updateProfile.UserId).FirstOrDefault();
+            var userProfile = _context.UsersProfiles.Where(m => m.UserId == updateProfile.UserId).FirstOrDefault();
 
             userProfile.Name = updateProfile.Name;
             userProfile.Email = updateProfile.Email;

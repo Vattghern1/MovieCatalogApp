@@ -1,4 +1,4 @@
-﻿namespace MovieCatalog.API.Models
+﻿namespace MovieCatalog.API.Models.DTOs
 {
     public enum Gender
     {

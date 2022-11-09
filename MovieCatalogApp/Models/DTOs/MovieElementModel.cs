@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MovieCatalog.API.Models.Entities;
 
-namespace MovieCatalog.API.Models.Entities
+namespace MovieCatalog.API.Models.DTOs
 {
     public class MovieElementModel
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid MovieId { get; set; }
         public string? Name { get; set; }
         public string? Poster { get; set; }
         public int Year { get; set; }

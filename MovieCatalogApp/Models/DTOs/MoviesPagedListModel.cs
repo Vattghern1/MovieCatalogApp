@@ -1,6 +1,4 @@
-﻿using MovieCatalog.API.Models.Entities;
-
-namespace MovieCatalog.API.Models
+﻿namespace MovieCatalog.API.Models.DTOs
 {
     public class MoviesPagedListModel
     {

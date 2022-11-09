@@ -27,8 +27,8 @@ namespace MovieCatalog.API.Services
         public JsonResult Register(UserRegisterModel request)
         {
 
-            var newNickName = _context.ProfileModels.Where(m => m.NickName == request.NickName).FirstOrDefault();
-            var newEmail = _context.ProfileModels.Where(m => m.Email == request.Email).FirstOrDefault();
+            var newNickName = _context.UsersProfiles.Where(m => m.NickName == request.NickName).FirstOrDefault();
+            var newEmail = _context.UsersProfiles.Where(m => m.Email == request.Email).FirstOrDefault();
 
             if (newNickName != null)
             {
@@ -63,12 +63,14 @@ namespace MovieCatalog.API.Services
 
 
             _context.LoginsAndPasswords.Add(loginAndPasswords);
-            _context.ProfileModels.Add(user);
+            _context.UsersProfiles.Add(user);
             _context.SaveChanges();
 
-            var registerLoginCrenentials = new LoginCredentials();
-            registerLoginCrenentials.NickName = request.NickName;
-            registerLoginCrenentials.Password = request.Password;
+            var registerLoginCrenentials = new LoginCredentials
+            {
+                NickName = request.NickName,
+                Password = request.Password
+            };
 
             return Login(registerLoginCrenentials);
         }
@@ -81,7 +83,7 @@ namespace MovieCatalog.API.Services
                 throw new Exception("Invalid username or password." );
             }
 
-            var loginUserProfile = _context.ProfileModels.Where(m => m.NickName == request.NickName).FirstOrDefault();
+            var loginUserProfile = _context.UsersProfiles.Where(m => m.NickName == request.NickName).FirstOrDefault();
             if (loginUserProfile == null)
             {
                 throw new Exception("User not found.");
@@ -146,7 +148,7 @@ namespace MovieCatalog.API.Services
                 throw new Exception("Token is not valid.");
             }
 
-            var user = _context.ProfileModels.FirstOrDefault(m => m.NickName == userName);
+            var user = _context.UsersProfiles.FirstOrDefault(m => m.NickName == userName);
 
             var newBadToken = new JSONWebToken
             {
