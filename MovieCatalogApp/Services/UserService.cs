@@ -35,7 +35,7 @@ namespace MovieCatalog.API.Services
             }
             
 
-            var userProfile = _context.UsersProfiles.Where(m => m.UserId == updateProfile.UserId).FirstOrDefault();
+            var userProfile = _context.UsersProfiles.Where(m => m.NickName == updateProfile.NickName).FirstOrDefault();
 
             userProfile.Name = updateProfile.Name;
             userProfile.Email = updateProfile.Email;
