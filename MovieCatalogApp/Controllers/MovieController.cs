@@ -18,7 +18,7 @@ namespace MovieCatalog.API.Controllers
         private readonly IMovieService _movieService;
         private readonly IValidateTokenService _validateTokenService;
 
-        private readonly Context _context;
+        private readonly Context _context; //
 
 
         public MovieController(IMovieService movieService, IValidateTokenService validateTokenService, Context context)
