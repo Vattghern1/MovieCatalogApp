@@ -38,7 +38,7 @@ namespace MovieCatalog.API.Services
             if (userEmail != null && userEmail.Email != null)
             {
                 context.Response.StatusCode = StatusCodes.Status409Conflict;
-                return new JsonResult("This Email is already taken.");
+                return new JsonResult("This Email is already taken.");//
             }
 
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
